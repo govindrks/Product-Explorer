@@ -2,11 +2,15 @@
 
 import Link from "next/link"
 
+type SortOrder = "none" | "lowToHigh" | "highToLow"
+
 type NavbarProps = {
   search: string
   onSearchChange: (value: string) => void
   showFavs: boolean
   onToggleFavorites: () => void
+  sortOrder: SortOrder
+  onSortChange: (value: SortOrder) => void
 }
 
 export default function Navbar({
@@ -14,6 +18,8 @@ export default function Navbar({
   onSearchChange,
   showFavs,
   onToggleFavorites,
+  sortOrder,
+  onSortChange,
 }: NavbarProps) {
   return (
     <nav className="flex items-center gap-4 mb-6">
@@ -34,6 +40,16 @@ export default function Navbar({
           placeholder="Search products..."
           className="border p-2 rounded w-full"
         />
+
+        <select
+          value={sortOrder}
+          onChange={e => onSortChange(e.target.value as SortOrder)}
+          className="border p-2 rounded text-sm"
+        >
+          <option value="none">Sort</option>
+          <option value="lowToHigh">Price: Low → High</option>
+          <option value="highToLow">Price: High → Low</option>
+        </select>
 
         <button
           onClick={onToggleFavorites}
