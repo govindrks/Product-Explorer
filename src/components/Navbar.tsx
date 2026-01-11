@@ -8,8 +8,14 @@ type SortOrder = "none" | "lowToHigh" | "highToLow"
 type NavbarProps = {
   search: string
   onSearchChange: (value: string) => void
+
+  category: string
+  categories: string[]
+  onCategoryChange: (value: string) => void
+
   showFavs: boolean
   onToggleFavorites: () => void
+
   sortOrder: SortOrder
   onSortChange: (value: SortOrder) => void
 }
@@ -17,6 +23,9 @@ type NavbarProps = {
 export default function Navbar({
   search,
   onSearchChange,
+  category,
+  categories,
+  onCategoryChange,
   showFavs,
   onToggleFavorites,
   sortOrder,
@@ -25,8 +34,10 @@ export default function Navbar({
   const { isDark, toggleTheme } = useTheme()
 
   return (
-    <nav className="flex items-center gap-4 mb-6 p-4 rounded bg-white dark:bg-gray-800">
-      
+    <nav
+      className="flex items-center gap-4 mb-6 p-4 rounded"
+      style={{ backgroundColor: "var(--card-bg)" }}
+    >
       {/* Logo */}
       <Link
         href="/"
@@ -35,14 +46,28 @@ export default function Navbar({
         Nishant Shopee
       </Link>
 
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex items-center gap-3 flex-1">
         {/* Search */}
         <input
           value={search}
           onChange={e => onSearchChange(e.target.value)}
           placeholder="Search products..."
-          className="border p-2 rounded w-full bg-white dark:bg-gray-700 dark:text-white"
+          className="border p-2 rounded w-full"
         />
+
+        {/* Category Filter */}
+        <select
+          value={category}
+          onChange={e => onCategoryChange(e.target.value)}
+          className="border p-2 rounded text-sm bg-white dark:bg-gray-700 dark:text-white"
+        >
+          <option value="all">All Categories</option>
+          {categories.map(cat => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
 
         {/* Sort */}
         <select
