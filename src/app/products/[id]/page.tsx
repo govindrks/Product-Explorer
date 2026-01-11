@@ -2,12 +2,6 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Product } from "@/types/product"
 
-type PageProps = {
-  params: Promise<{
-    id: string
-  }>
-}
-
 async function getProduct(id: string): Promise<Product> {
   const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
     cache: "no-store",
@@ -22,9 +16,10 @@ async function getProduct(id: string): Promise<Product> {
 
 export default async function ProductDetailsPage({
   params,
-}: PageProps) {
-  const { id } = await params   // IMPORTANT
-  const product = await getProduct(id)
+}: {
+  params: { id: string }
+}) {
+  const product = await getProduct(params.id)
 
   return (
     <div className="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
