@@ -1,41 +1,53 @@
 "use client"
 
-import { useProducts } from "@/hooks/useProducts"
-import { ProductCard } from "@/components/ProductCard"
-import { useFavorites } from "@/context/FavoritesContext"
 import { useState } from "react"
+import { useProducts } from "@/hooks/useProducts"
+import { useFavorites } from "@/context/FavoritesContext"
+import { ProductCard } from "@/components/ProductCard"
+import Navbar from "@/components/Navbar"
 
 export default function HomePage() {
   const { products, loading, error } = useProducts()
   const { favorites } = useFavorites()
+
   const [search, setSearch] = useState("")
   const [showFavs, setShowFavs] = useState(false)
 
-  const filtered = products.filter(p => {
-    const matchTitle = p.title.toLowerCase().includes(search.toLowerCase())
-    const matchFav = !showFavs || favorites.includes(p.id)
-    return matchTitle && matchFav
+  const filteredProducts = products.filter(product => {
+    const matchTitle = product.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+
+    const matchFavorites =
+      !showFavs || favorites.includes(product.id)
+
+    return matchTitle && matchFavorites
   })
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>{error}</p>
+  if (loading) return <p className="p-4">Loading...</p>
+  if (error) return <p className="p-4">{error}</p>
 
   return (
     <div className="p-4">
-      <div className="flex gap-4 mb-4">
-        <input
-          placeholder="Search products..."
-          className="border p-2 rounded w-full"
-          onChange={e => setSearch(e.target.value)}
-        />
-        <button onClick={() => setShowFavs(p => !p)}>
-          Favorites
-        </button>
-      </div>
+      
+     
+      <Navbar
+        search={search}
+        onSearchChange={setSearch}
+        showFavs={showFavs}
+        onToggleFavorites={() => setShowFavs(prev => !prev)}
+      />
 
+      
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filtered.map(p => (
-          <ProductCard key={p.id} product={p} />
+        {filteredProducts.length === 0 && (
+          <p className="col-span-full text-center text-gray-500">
+            No products found
+          </p>
+        )}
+
+        {filteredProducts.map(product => (
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>
