@@ -18,27 +18,30 @@ export default function Navbar({
   return (
     <nav className="flex items-center gap-4 mb-6">
       
+      
       <Link
         href="/"
-        className="font-bold text-xl hover:text-blue-600 transition"
+        className="font-bold text-xl hover:text-blue-600 transition whitespace-nowrap cursor-pointer"
       >
         Nishant Shopee
       </Link>
 
-     
-      <input
-        value={search}
-        onChange={e => onSearchChange(e.target.value)}
-        placeholder="Search products..."
-        className="border p-2 rounded w-full"
-      />
+      
+      <div className="flex items-center gap-4 flex-1">
+        <input
+          value={search}
+          onChange={e => onSearchChange(e.target.value)}
+          placeholder="Search products..."
+          className="border p-2 rounded w-full"
+        />
 
-      <button
-        onClick={onToggleFavorites}
-        className="px-4 py-2 border rounded text-sm whitespace-nowrap"
-      >
-        {showFavs ? "Show All" : "Favorites"}
-      </button>
+        <button
+          onClick={onToggleFavorites}
+          className="px-4 py-2 border rounded text-sm whitespace-nowrap"
+        >
+          {showFavs ? "Show All" : "Favorites"}
+        </button>
+      </div>
     </nav>
   )
 }
