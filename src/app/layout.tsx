@@ -1,10 +1,6 @@
 import "./globals.css"
+import { ThemeProvider } from "@/context/ThemeContext"
 import { FavoritesProvider } from "@/context/FavoritesContext"
-
-export const metadata = {
-  title: "Product Explorer",
-  description: "Product Explorer Dashboard",
-}
 
 export default function RootLayout({
   children,
@@ -13,10 +9,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <FavoritesProvider>
-          {children}
-        </FavoritesProvider>
+      <body className="bg-gray-100 dark:bg-gray-900 transition-colors">
+        <ThemeProvider>
+          <FavoritesProvider>
+            {children}
+          </FavoritesProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
