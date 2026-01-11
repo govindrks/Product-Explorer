@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A small frontend app built with Next.js (App Router), TypeScript, and Tailwind CSS that showcases product listing, filtering, favorites, and theming.
 
-## Getting Started
 
-First, run the development server:
-
-```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Product Explorer Dashboard
 
-## Learn More
+This project demonstrates practical frontend engineering skills using Next.js (App Router), TypeScript, and Tailwind CSS.
 
-To learn more about Next.js, take a look at the following resources:
+The focus is on clean architecture, state management, and real-world UI patterns, rather than visual polish.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+src/
+├── app/              # Routes (App Router)
+├── components/       # UI components
+├── context/          # Theme & Favorites
+├── hooks/            # Data fetching
+├── lib/              # API helpers
+└── types/            # TypeScript types
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+* What This Project Shows
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+.Clean component separation (Navbar, ProductCard, context providers)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+.Client-side data handling (search, filters, sorting, pagination)
+
+.Thoughtful state management using React Context
+
+.Sensible trade-offs based on dataset size
+
+.Basic accessibility considerations
+
+.Theme handling with persistence
+
+Implemented Features
+
+.Product listing from a public API
+
+.Responsive grid layout
+
+.Search by product title
+
+.Category-based filtering
+
+.Price-based sorting
+
+.Favorites with persistence
+
+.Pagination
+
+.Dark / light mode using global theme context
+
+.Keyboard navigation and ARIA labels
+
+Technical Choices & Rationale
+
+.Client-side filtering & pagination
+.The dataset is small, making client-side operations appropriate and simpler.
+
+React Context over Redux
+Global state is limited and does not justify heavier state management.
+
+CSS-variable based theming
+Decouples theming from framework configuration and scales well.
+
+Next.js App Router
+Enables clean routing and component organization.
+
+Assumptions & Trade-offs
+
+No backend pagination or filtering
+
+No automated tests (scope-limited)
+
+Accessibility is basic but intentional
+
+Potential Extensions
+
+Server-side filtering and pagination
+
+URL-driven filters
+
+Component testing
+
+Skeleton loaders and performance tuning
