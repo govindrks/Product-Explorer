@@ -10,42 +10,29 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Initialize state lazily
+  // Initial value: rely on pre-hydration script which sets the `dark` class on <html>
   const [isDark, setIsDark] = useState(() => {
     if (typeof window === "undefined") return false
-    const stored = localStorage.getItem("theme")
-    if (stored === "dark") return true
-    if (stored === "light") return false
-    // fallback to OS preference
-    try {
-      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-    } catch {
-      return false
-    }
+    return document.documentElement.classList.contains("dark")
   })
 
-  // Effect only syncs DOM (NO setState)
   useEffect(() => {
     const html = document.documentElement
-
     if (isDark) {
       html.classList.add("dark")
-      localStorage.setItem("theme", "dark")
+      try {
+        localStorage.setItem("theme", "dark")
+      } catch {}
     } else {
       html.classList.remove("dark")
-      localStorage.setItem("theme", "light")
+      try {
+        localStorage.setItem("theme", "light")
+      } catch {}
     }
-
-    // debug
-    console.debug("ThemeProvider: isDark=", isDark, "html classes=", html.className)
   }, [isDark])
 
   const toggleTheme = () => {
-    setIsDark(prev => {
-      const next = !prev
-      console.debug("ThemeProvider.toggleTheme ->", next)
-      return next
-    })
+    setIsDark(prev => !prev)
   }
 
   return (
@@ -57,8 +44,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme() {
   const ctx = useContext(ThemeContext)
-  if (!ctx) {
-    throw new Error("useTheme must be used within ThemeProvider")
-  }
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider")
   return ctx
 }
