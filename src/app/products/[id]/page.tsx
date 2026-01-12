@@ -17,9 +17,10 @@ async function getProduct(id: string): Promise<Product> {
 export default async function ProductDetailsPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const product = await getProduct(params.id)
+  const { id } = await params  
+  const product = await getProduct(id)
 
   return (
     <div className="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
