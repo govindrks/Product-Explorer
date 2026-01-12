@@ -2,12 +2,6 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Product } from "@/types/product"
 
-type Props = {
-  params: {
-    id: string
-  }
-}
-
 async function getProduct(id: string): Promise<Product> {
   const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
     cache: "no-store",
@@ -20,7 +14,11 @@ async function getProduct(id: string): Promise<Product> {
   return res.json()
 }
 
-export default async function ProductDetailsPage({ params }: Props) {
+export default async function ProductDetailsPage({
+  params,
+}: {
+  params: { id: string }
+}) {
   const product = await getProduct(params.id)
 
   return (
