@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card-bg: #ffffff;
 }
 
 @theme inline {
@@ -12,10 +13,19 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Support dark class toggle (used by ThemeProvider) */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card-bg: #111827; /* gray-900-ish */
+}
+
+/* Fallback to OS preference for initial load */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --card-bg: #111827;
   }
 }
 
@@ -23,4 +33,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility: cards and surfaces use this variable */
+.card {
+  background: var(--card-bg);
 }

@@ -34,10 +34,7 @@ export default function Navbar({
   const { isDark, toggleTheme } = useTheme()
 
   return (
-    <nav
-      className="flex items-center gap-4 mb-6 p-4 rounded"
-      style={{ backgroundColor: "var(--card-bg)" }}
-    >
+    <nav className="flex items-center gap-4 mb-6 p-4 rounded card">
       {/* Logo */}
       <Link
         href="/"

@@ -1,16 +1,20 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import Navbar from "@/components/Navbar"
 import { ProductCard } from "@/components/ProductCard"
-import { useProducts } from "@/hooks/useProducts"
+import { productService } from "@/lib/api"
 import { useFavorites } from "@/context/FavoritesContext"
+import { Product } from "@/types/product"
 
 const ITEMS_PER_PAGE = 8
 type SortOrder = "none" | "lowToHigh" | "highToLow"
 
 export default function HomePage() {
-  const { products, loading, error } = useProducts()
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const { favorites } = useFavorites()
 
   const [search, setSearch] = useState("")
@@ -18,6 +22,25 @@ export default function HomePage() {
   const [showFavs, setShowFavs] = useState(false)
   const [sortOrder, setSortOrder] = useState<SortOrder>("none")
   const [currentPage, setCurrentPage] = useState(1)
+
+  useEffect(() => {
+    let mounted = true
+    productService
+      .getProducts()
+      .then(data => {
+        if (mounted) setProducts(data)
+      })
+      .catch(err => {
+        if (mounted) setError(err.message)
+      })
+      .finally(() => {
+        if (mounted) setLoading(false)
+      })
+
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   const filtersKey = `${search}|${category}|${showFavs}|${sortOrder}`
   const [lastFiltersKey, setLastFiltersKey] = useState(filtersKey)
