@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
+import Navbar from "@/components/Navbar"
+import { ProductCard } from "@/components/ProductCard"
 import { useProducts } from "@/hooks/useProducts"
 import { useFavorites } from "@/context/FavoritesContext"
-import { ProductCard } from "@/components/ProductCard"
-import Navbar from "@/components/Navbar"
 
 const ITEMS_PER_PAGE = 8
 type SortOrder = "none" | "lowToHigh" | "highToLow"
@@ -19,12 +19,18 @@ export default function HomePage() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("none")
   const [currentPage, setCurrentPage] = useState(1)
 
-  // 🧩 Extract unique categories
+  const filtersKey = `${search}|${category}|${showFavs}|${sortOrder}`
+  const [lastFiltersKey, setLastFiltersKey] = useState(filtersKey)
+
+  if (filtersKey !== lastFiltersKey) {
+    setLastFiltersKey(filtersKey)
+    setCurrentPage(1)
+  }
+
   const categories = useMemo(() => {
     return Array.from(new Set(products.map(p => p.category)))
   }, [products])
 
-  // 🔍 FILTER + SORT
   let filteredProducts = products.filter(product => {
     const matchSearch = product.title
       .toLowerCase()
@@ -39,7 +45,6 @@ export default function HomePage() {
     return matchSearch && matchCategory && matchFavorites
   })
 
-  // 🔃 SORT
   if (sortOrder === "lowToHigh") {
     filteredProducts = [...filteredProducts].sort(
       (a, b) => a.price - b.price
@@ -52,7 +57,6 @@ export default function HomePage() {
     )
   }
 
-  // 📄 PAGINATION
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const paginatedProducts = filteredProducts.slice(
@@ -60,16 +64,11 @@ export default function HomePage() {
     startIndex + ITEMS_PER_PAGE
   )
 
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [search, category, showFavs, sortOrder])
-
   if (loading) return <p className="p-4">Loading...</p>
   if (error) return <p className="p-4">{error}</p>
 
   return (
-    <div className="p-4">
+    <div className="p-4 min-h-screen">
       <Navbar
         search={search}
         onSearchChange={setSearch}
@@ -77,12 +76,11 @@ export default function HomePage() {
         categories={categories}
         onCategoryChange={setCategory}
         showFavs={showFavs}
-        onToggleFavorites={() => setShowFavs(prev => !prev)}
+        onToggleFavorites={() => setShowFavs(p => !p)}
         sortOrder={sortOrder}
         onSortChange={setSortOrder}
       />
 
-      {/* Products Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {paginatedProducts.length === 0 && (
           <p className="col-span-full text-center text-gray-500">
@@ -95,9 +93,8 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-6">
+        <div className="flex justify-center items-center gap-3 mt-6">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(p => p - 1)}
