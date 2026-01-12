@@ -9,21 +9,28 @@ type FavoritesContextType = {
 
 const FavoritesContext = createContext<FavoritesContextType | null>(null)
 
-export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favorites, setFavorites] = useState<number[]>([])
-
-  useEffect(() => {
+export function FavoritesProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  // Lazy initialization (NO setState in effect)
+  const [favorites, setFavorites] = useState<number[]>(() => {
+    if (typeof window === "undefined") return []
     const stored = localStorage.getItem("favorites")
-    if (stored) setFavorites(JSON.parse(stored))
-  }, [])
+    return stored ? JSON.parse(stored) : []
+  })
 
+  // Effect only syncs localStorage
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites))
   }, [favorites])
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev =>
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter(favId => favId !== id)
+        : [...prev, id]
     )
   }
 
@@ -34,8 +41,10 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export const useFavorites = () => {
+export function useFavorites() {
   const ctx = useContext(FavoritesContext)
-  if (!ctx) throw new Error("useFavorites must be used inside provider")
+  if (!ctx) {
+    throw new Error("useFavorites must be used within FavoritesProvider")
+  }
   return ctx
 }
